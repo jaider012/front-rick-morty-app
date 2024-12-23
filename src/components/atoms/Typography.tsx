@@ -19,7 +19,7 @@ export function Typography({
   return (
     <Component
       className={clsx(
-        "text-gray-900 dark:text-gray-100",
+        "text-gray-900",
         {
           "text-4xl font-bold lg:text-5xl": variant === "h1",
           "text-3xl font-bold lg:text-4xl": variant === "h2",
