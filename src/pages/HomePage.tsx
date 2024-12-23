@@ -131,6 +131,7 @@ export function HomePage() {
               <CharacterList
                 characters={characters}
                 onToggleFavorite={toggleFavorite}
+                filters={filters}
                 selectedCharacter={selectedCharacter}
                 onSelectCharacter={setSelectedCharacter}
               />

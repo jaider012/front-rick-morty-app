@@ -1,8 +1,10 @@
-import { Character } from "../../types/character";
+import { Character, CharacterFilters } from "../../types/character";
 import { CharacterListItem } from "../molecules/CharacterListItems";
+import { ResultsCounter } from "../molecules/ResultsCounter";
 
 interface CharacterListProps {
   characters: Character[];
+  filters: CharacterFilters;
   onToggleFavorite: (id: string) => void;
   selectedCharacter?: string;
   onSelectCharacter: (id: string) => void;
@@ -10,6 +12,7 @@ interface CharacterListProps {
 
 export function CharacterList({
   characters,
+  filters,
   onToggleFavorite,
   selectedCharacter,
   onSelectCharacter,
@@ -19,6 +22,10 @@ export function CharacterList({
 
   return (
     <div className="flex h-[calc(100vh-120px)] flex-col">
+      {filters.species !== "All" && filters.favoriteFilter !== "All" && (
+        <ResultsCounter totalResults={characters.length} filters={filters} />
+      )}
+
       <div className="flex-1 overflow-y-auto">
         {starredCharacters.length > 0 && (
           <div>

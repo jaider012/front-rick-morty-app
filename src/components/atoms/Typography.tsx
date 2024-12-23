@@ -26,7 +26,7 @@ export function Typography({
           "text-2xl font-bold lg:text-3xl": variant === "h3",
           "text-xl font-semibold lg:text-2xl": variant === "h4",
           "text-base lg:text-lg": variant === "p",
-          "text-sm text-gray-500 dark:text-gray-400": variant === "small",
+          "text-sm ": variant === "small",
         },
         className
       )}
