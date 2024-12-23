@@ -10,7 +10,7 @@ import { CharacterAttribute } from "../atoms/CharacterAttribute";
 import { Typography } from "../atoms/Typography";
 import { Input } from "../atoms/Input";
 import { Button } from "../atoms/Button";
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, Trash2, Send, Rocket } from "lucide-react";
 import clsx from "clsx";
 
 interface CharacterDetailProps {
@@ -52,7 +52,7 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#8054C7] border-t-transparent"></div>
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#8054C7] border-t-transparent" />
       </div>
     );
   }
@@ -70,30 +70,29 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
   const character = data?.character;
 
   return (
-    <div className="h-full">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <img
-            src={character.image}
-            alt={character.name}
-            className="h-16 w-16 rounded-full object-cover"
-          />
-          <Typography variant="h1" className="text-gray-900">
-            {character.name}
-          </Typography>
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="ghost"
-            onClick={() => toggleFavorite({ variables: { id: character.id } })}
-          >
-            <Heart
-              className={clsx("h-6 w-6", {
-                "fill-[#53C629] text-[#53C629]": character.favorite,
-                "text-gray-300": !character.favorite,
-              })}
+    <div className="h-full p-6">
+      {/* Header with image, name, and actions */}
+      <div className="mb-12">
+        <div className="flex items-start justify-between">
+          <div className="relative inline-block">
+            <img
+              src={character.image}
+              alt={character.name}
+              className="h-20 w-20 rounded-full object-cover"
             />
-          </Button>
+            <Heart
+              className={clsx(
+                "absolute -right-1 -bottom-1 h-9 w-9 cursor-pointer rounded-full bg-white p-2",
+                {
+                  "fill-[#53C629] text-[#53C629]": character.favorite,
+                  "text-gray-300": !character.favorite,
+                }
+              )}
+              onClick={() =>
+                toggleFavorite({ variables: { id: character.id } })
+              }
+            />
+          </div>
           <Button
             variant="ghost"
             onClick={() => {
@@ -105,37 +104,64 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
                 softDeleteCharacter({ variables: { id: character.id } });
               }
             }}
+            className="rounded-full p-2 hover:bg-gray-100"
           >
             <Trash2 className="h-6 w-6 text-gray-400" />
           </Button>
         </div>
+        <Typography variant="h1" className="mt-4 text-3xl font-bold">
+          {character.name}
+        </Typography>
       </div>
 
-      <div className="mb-8">
+      {/* Character Attributes */}
+      <div className="space-y-0">
         <CharacterAttribute label="Specie" value={character.species} />
         <CharacterAttribute label="Status" value={character.status} />
-        <CharacterAttribute label="Gender" value={character.gender} />
-        <CharacterAttribute label="Origin" value={character.origin} />
-        <CharacterAttribute label="Location" value={character.location} />
+        <CharacterAttribute label="Occupation" value="Princess" />
+
+        <div className="hidden">
+          <CharacterAttribute label="Gender" value={character.gender} />
+          <CharacterAttribute label="Origin" value={character.origin.name} />
+          <CharacterAttribute
+            label="Location"
+            value={character.location.name}
+          />
+        </div>
       </div>
 
       {/* Comments Section */}
-      <div className="rounded-lg bg-gray-50 p-6">
-        <Typography variant="h3" className="mb-4">
+      <div className="mt-12">
+        <Typography variant="h3" className="mb-6 text-xl font-semibold">
           Comments
         </Typography>
 
-        <div className="mb-6 flex gap-2">
-          <Input
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Write a comment..."
-            className="flex-1 bg-white"
-          />
-          <Button onClick={handleAddComment}>Post</Button>
+        {/* Comment Input */}
+        <div className="mb-8">
+          <div className="flex gap-2">
+            <Input
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Write a comment..."
+              className="flex-1 rounded-lg border-gray-200 bg-white px-4 py-3"
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleAddComment();
+                }
+              }}
+            />
+            <Button
+              onClick={handleAddComment}
+              variant="secondary"
+              className=" bg-slate-50"
+            >
+              <Rocket className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
-        <div className="space-y-4">
+        {/* Comments List */}
+        <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
           {character.comments?.map(
             (comment: {
               id: Key;
@@ -144,10 +170,12 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
             }) => (
               <div
                 key={comment.id}
-                className="rounded-lg bg-white p-4 shadow-sm transition-all hover:shadow-md"
+                className="rounded-lg border border-gray-100 bg-white p-4 transition-all hover:border-[#53C629]/20"
               >
-                <Typography variant="p">{comment.content}</Typography>
-                <Typography variant="small" className="mt-2">
+                <Typography variant="p" className="text-gray-800">
+                  {comment.content}
+                </Typography>
+                <Typography variant="small" className="mt-2 text-[#53C629]">
                   {new Date(comment.created).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -159,8 +187,18 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
               </div>
             )
           )}
+
+          {!character.comments?.length && (
+            <div className="text-center py-8">
+              <Typography variant="p" className="text-gray-500">
+                No comments yet. Be the first to comment!
+              </Typography>
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
+
+export default CharacterDetail;

@@ -79,7 +79,7 @@ export default function SearchFilterBar({
         />
         <button
           onClick={handleOpenFilters}
-          className="rounded-lg p-2 hover:bg-white/50"
+          className="rounded-lg p-2"
         >
           <SlidersHorizontal className="h-5 w-5 text-[#8054C7]" />
         </button>

@@ -19,9 +19,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
           'disabled:pointer-events-none disabled:opacity-50',
           {
-            'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600': variant === 'primary',
-            'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-100': variant === 'secondary',
-            'hover:bg-gray-100 dark:hover:bg-gray-800': variant === 'ghost',
+            'bg-blue-600 text-white hover:bg-blue-700 ': variant === 'primary',
+            'bg-gray-100 text-gray-900 hover:bg-gray-200': variant === 'secondary',
+            'hover:bg-gray-100 dark:hover:bg-gray-200': variant === 'ghost',
             'h-8 px-3 text-sm': size === 'sm',
             'h-10 px-4': size === 'md',
             'h-12 px-6 text-lg': size === 'lg',

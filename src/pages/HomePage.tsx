@@ -115,7 +115,7 @@ export function HomePage() {
   return (
     <MainLayout>
       <div className="flex h-screen">
-        <div className="w-[480px] border-r border-gray-200 bg-white">
+        <div className="w-[420px] border-r border-gray-200 bg-white">
           <div className="p-4">
             <Typography variant="h2" className="mb-4">
               Rick and Morty

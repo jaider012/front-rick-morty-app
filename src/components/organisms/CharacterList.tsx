@@ -42,24 +42,26 @@ export function CharacterList({
           </div>
         )}
 
-        <div>
-          <div className="sticky top-0 bg-white px-4 py-3">
-            <h2 className="text-sm font-medium text-gray-600">
-              CHARACTERS ({unstarredCharacters.length})
-            </h2>
+        {unstarredCharacters.length > 0 && (
+          <div>
+            <div className="sticky top-0 bg-white px-4 py-3">
+              <h2 className="text-sm font-medium text-gray-600">
+                CHARACTERS ({unstarredCharacters.length})
+              </h2>
+            </div>
+            <div className="grid gap-2">
+              {unstarredCharacters.map((character) => (
+                <CharacterListItem
+                  key={character.id}
+                  character={character}
+                  onToggleFavorite={onToggleFavorite}
+                  isSelected={selectedCharacter === character.id}
+                  onSelect={onSelectCharacter}
+                />
+              ))}
+            </div>
           </div>
-          <div className="grid gap-2">
-            {unstarredCharacters.map((character) => (
-              <CharacterListItem
-                key={character.id}
-                character={character}
-                onToggleFavorite={onToggleFavorite}
-                isSelected={selectedCharacter === character.id}
-                onSelect={onSelectCharacter}
-              />
-            ))}
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
