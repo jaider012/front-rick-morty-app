@@ -27,7 +27,7 @@ export function CharacterList({
                 STARRED CHARACTERS ({starredCharacters.length})
               </h2>
             </div>
-            <div>
+            <div className="grip gap-2">
               {starredCharacters.map((character) => (
                 <CharacterListItem
                   key={character.id}
@@ -48,7 +48,7 @@ export function CharacterList({
               CHARACTERS ({unstarredCharacters.length})
             </h2>
           </div>
-          <div>
+          <div className=" grip gap-2">
             {unstarredCharacters.map((character) => (
               <CharacterListItem
                 key={character.id}

@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 
-type Filter = {
-  character: "All" | "Starred" | "Others";
+type FavoriteFilterType = "All" | "Starred" | "Others";
+
+interface Filter {
+  favoriteFilter: FavoriteFilterType;
   species: "All" | "Human" | "Alien";
-};
+}
 
 interface SearchFilterBarProps {
   value: string;
   onSearch: (value: string) => void;
-  onFilterChange: (filters: Filter) => void;
+  onFilterChange: (filters: {
+    favoriteFilter?: FavoriteFilterType;
+    species?: string;
+  }) => void;
 }
 
 export default function SearchFilterBar({
@@ -19,16 +24,15 @@ export default function SearchFilterBar({
 }: SearchFilterBarProps) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<Filter>({
-    character: "All",
+    favoriteFilter: "All",
     species: "All",
   });
   const [tempFilters, setTempFilters] = useState<Filter>({
-    character: "All",
+    favoriteFilter: "All",
     species: "All",
   });
 
   useEffect(() => {
-    // Close filter modal when typing in search
     if (value.length > 0) {
       setIsFilterOpen(false);
     }
@@ -46,16 +50,19 @@ export default function SearchFilterBar({
 
   const handleApplyFilters = () => {
     setSelectedFilters(tempFilters);
-    onFilterChange(tempFilters);
+    onFilterChange({
+      favoriteFilter:
+        tempFilters.favoriteFilter !== "All"
+          ? tempFilters.favoriteFilter
+          : undefined,
+      species: tempFilters.species !== "All" ? tempFilters.species : undefined,
+    });
     setIsFilterOpen(false);
   };
 
-  // Reset temp filters when opening modal
   const handleOpenFilters = () => {
     setTempFilters(selectedFilters);
-    setIsFilterOpen(
-      (prev) => !prev // Toggle filter modal
-    );
+    setIsFilterOpen((prev) => !prev);
   };
 
   return (
@@ -72,7 +79,7 @@ export default function SearchFilterBar({
         />
         <button
           onClick={handleOpenFilters}
-          className="rounded-lg p-2"
+          className="rounded-lg p-2 hover:bg-white/50"
         >
           <SlidersHorizontal className="h-5 w-5 text-[#8054C7]" />
         </button>
@@ -80,29 +87,26 @@ export default function SearchFilterBar({
 
       {/* Filter Modal */}
       {isFilterOpen && (
-        <div className="absolute right-0 top-full mt-2 w-72 rounded-2xl bg-white p-4 shadow-lg">
+        <div className="absolute z-10 right-0 top-full mt-2 w-full rounded-2xl bg-white p-4 shadow-lg">
           {/* Character Filter */}
           <div className="space-y-3">
             <h3 className="text-lg font-medium text-gray-700">Character</h3>
             <div className="grid grid-cols-3 gap-2">
-              {["All", "Starred", "Others"].map((option) => (
-                <button
-                  key={option}
-                  onClick={() =>
-                    handleFilterSelect(
-                      "character",
-                      option as Filter["character"]
-                    )
-                  }
-                  className={`rounded-xl px-4 py-2 text-sm transition-colors ${
-                    tempFilters.character === option
-                      ? "bg-[#EEE3FF] text-[#8054C7]"
-                      : "bg-[#F3F4F6] text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {option}
-                </button>
-              ))}
+              {(["All", "Starred", "Others"] as FavoriteFilterType[]).map(
+                (option) => (
+                  <button
+                    key={option}
+                    onClick={() => handleFilterSelect("favoriteFilter", option)}
+                    className={`rounded-xl px-4 py-2 text-sm transition-colors ${
+                      tempFilters.favoriteFilter === option
+                        ? "bg-[#EEE3FF] text-[#8054C7]"
+                        : "bg-[#F3F4F6] text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {option}
+                  </button>
+                )
+              )}
             </div>
           </div>
 

@@ -1,10 +1,10 @@
 export interface Character {
   id: string;
   name: string;
-  status: 'Alive' | 'Dead' | 'unknown';
+  status: "Alive" | "Dead" | "unknown";
   species: string;
   type: string;
-  gender: 'Female' | 'Male' | 'Genderless' | 'unknown';
+  gender: "Female" | "Male" | "Genderless" | "unknown";
   origin: Location;
   location: Location;
   image: string;
@@ -32,5 +32,6 @@ export interface CharacterFilters {
   status?: string;
   species?: string;
   gender?: string;
-  sortDirection?: 'asc' | 'desc';
+  sortDirection?: "asc" | "desc";
+  favoriteFilter?: "All" | "Starred" | "Others";
 }

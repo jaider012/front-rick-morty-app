@@ -36,6 +36,24 @@ export const GET_CHARACTERS = gql`
   }
 `;
 
+// Helper type for frontend use
+export interface CharacterFilter {
+  name?: string;
+  status?: string;
+  species?: string;
+  type?: string;
+  gender?: string;
+  origin?: string;
+  favorite?: boolean;
+  favoriteFilter?: "Starred" | "All" | "Others";
+}
+
+// Helper type for sort parameters
+export interface SortInput {
+  field: string;
+  direction: "asc" | "desc";
+}
+
 export const GET_CHARACTER = gql`
   query GetCharacter($id: ID!) {
     character(id: $id) {
@@ -64,12 +82,12 @@ export const GET_CHARACTER = gql`
   }
 `;
 
-// Add mutations based on the schema
 export const TOGGLE_FAVORITE = gql`
   mutation ToggleFavorite($id: ID!) {
     toggleFavorite(id: $id) {
       id
       favorite
+      updatedAt
     }
   }
 `;
@@ -82,6 +100,7 @@ export const ADD_COMMENT = gql`
       created
       createdAt
       updatedAt
+      characterId
     }
   }
 `;
@@ -91,6 +110,7 @@ export const SOFT_DELETE_CHARACTER = gql`
     softDeleteCharacter(id: $id) {
       id
       deleted
+      updatedAt
     }
   }
 `;
