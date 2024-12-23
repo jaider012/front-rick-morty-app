@@ -10,7 +10,7 @@ export interface Character {
   image: string;
   episode: Episode[];
   created: string;
-  isFavorite?: boolean;
+  favorite?: boolean;
 }
 
 export interface Location {

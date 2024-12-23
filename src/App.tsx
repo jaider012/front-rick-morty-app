@@ -7,12 +7,10 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Router>
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-            </Routes>
-          </div>
+        <div className="px-4 py-8 sm:px-6 lg:px-8">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+          </Routes>
         </div>
       </Router>
     </ApolloProvider>

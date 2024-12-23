@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_CHARACTERS, TOGGLE_FAVORITE } from "../graphql/queries";
 import { MainLayout } from "../components/templates/MainLayout";
 import { Typography } from "../components/atoms/Typography";
-import { Character, CharacterFilters } from "../types/character";
-import { SearchBar } from "../components/molecules/SearchBar";
+import { CharacterFilters } from "../types/character";
 import { CharacterList } from "../components/organisms/CharacterList";
 import { CharacterDetail } from "../components/organisms/CharacterDetail";
+import SearchFilterBar from "../components/molecules/SearchBar";
 
 export function HomePage() {
   const [filters, setFilters] = useState<CharacterFilters>({
@@ -22,12 +22,13 @@ export function HomePage() {
   const [selectedCharacter, setSelectedCharacter] = useState<
     string | undefined
   >();
+  const [searchValue, setSearchValue] = useState("");
 
   const { loading, error, data } = useQuery(GET_CHARACTERS, {
     variables: {
       page: 1,
       filter: {
-        name: filters.name || undefined,
+        name: searchValue || undefined,
         status: filters.status || undefined,
         species: filters.species || undefined,
         gender: filters.gender || undefined,
@@ -53,18 +54,21 @@ export function HomePage() {
     }
   };
 
-  // No need to map isFavorite manually as it comes from the backend now
   const characters = data?.characters.results || [];
 
-  const handleFilterChange = (newFilters: CharacterFilters) => {
-    setFilters(newFilters);
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
   };
 
-  const handleSortChange = (direction: "asc" | "desc") => {
-    setSort((prev) => ({
-      ...prev,
-      direction,
-    }));
+  const handleFilterChange = (selectedFilters: {
+    character: string;
+    species: string;
+  }) => {
+    const newFilters: CharacterFilters = {
+      ...filters,
+      species: selectedFilters.species === "All" ? "" : selectedFilters.species,
+    };
+    setFilters(newFilters);
   };
 
   if (error) {
@@ -85,17 +89,13 @@ export function HomePage() {
       <div className="flex h-[calc(100vh-4rem)]">
         <div className="w-80 border-r border-gray-200 dark:border-gray-800">
           <div className="p-4">
-            <Typography variant="h2" className="mb-4">
+            <Typography variant="h2" className="mb-4 ">
               Rick and Morty
             </Typography>
-            <SearchBar
-              value={filters.name || ""}
-              onChange={(value) =>
-                handleFilterChange({ ...filters, name: value })
-              }
-              onSearch={() => {
-                // Refetch query is handled automatically by Apollo
-              }}
+            <SearchFilterBar
+              value={searchValue}
+              onSearch={handleSearch}
+              onFilterChange={handleFilterChange}
             />
           </div>
           {!loading && characters && (
