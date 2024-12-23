@@ -41,7 +41,6 @@ src/
 │   ├── molecules/      # Simple combinations (SearchBar, etc)
 │   ├── organisms/      # Complex components (CharacterGrid, etc)
 │   └── templates/      # Page layouts
-├── ui/                 # Shared UI components
 ├── graphql/           # GraphQL queries
 ├── lib/               # Utilities and config
 ├── pages/             # Route components
