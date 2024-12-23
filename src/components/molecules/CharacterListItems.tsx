@@ -23,7 +23,7 @@ export function CharacterListItem({
     <div
       className={clsx(
         "flex items-center justify-between cursor-pointer transition-colors",
-        "px-4 py-2 rounded-lg border-b border-gray-100",
+        "px-6 py-4 rounded-xl border-b border-gray-100",
         isSelected ? "bg-[#EEE3FF]" : "bg-white hover:bg-gray-50" // Caso normal (favoritos o no, pero NO seleccionado)
       )}
       onClick={() => onSelect(character.id)}
