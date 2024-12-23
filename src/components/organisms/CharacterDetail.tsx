@@ -36,7 +36,6 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
 
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
-
     try {
       await addComment({
         variables: {
@@ -50,20 +49,20 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
     }
   };
 
-  if (error) {
+  if (loading) {
     return (
-      <div className="rounded-lg bg-red-50 p-4 dark:bg-red-900/20">
-        <Typography variant="h4" className="text-red-600 dark:text-red-400">
-          Error: {error.message}
-        </Typography>
+      <div className="flex h-full items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#8054C7] border-t-transparent"></div>
       </div>
     );
   }
 
-  if (loading) {
+  if (error) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+      <div className="flex h-full items-center justify-center">
+        <Typography variant="p" className="text-red-500">
+          Error: {error.message}
+        </Typography>
       </div>
     );
   }
@@ -71,85 +70,91 @@ export function CharacterDetail({ id }: CharacterDetailProps) {
   const character = data?.character;
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-start gap-6">
-        <img
-          src={character.image}
-          alt={character.name}
-          className="h-48 w-48 rounded-lg object-cover"
-        />
-        <div className="space-y-4 flex-1">
-          <div className="flex items-start justify-between">
-            <Typography variant="h1">{character.name}</Typography>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  toggleFavorite({ variables: { id: character.id } })
-                }
-              >
-                <Heart
-                  className={clsx("h-5 w-5", {
-                    "fill-red-500 text-red-500": character.favorite,
-                    "text-gray-400": !character.favorite,
-                  })}
-                />
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      "Are you sure you want to delete this character?"
-                    )
-                  ) {
-                    softDeleteCharacter({ variables: { id: character.id } });
-                  }
-                }}
-              >
-                <Trash2 className="h-5 w-5 text-gray-400" />
-              </Button>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <CharacterAttribute label="Species" value={character.species} />
-            <CharacterAttribute label="Status" value={character.status} />
-            <CharacterAttribute label="Gender" value={character.gender} />
-            <CharacterAttribute label="Origin" value={character.origin} />
-            <CharacterAttribute label="Location" value={character.location} />
-            <CharacterAttribute
-              label="Created"
-              value={new Date(character.createdAt).toLocaleDateString()}
+    <div className="h-full">
+      <div className="mb-8 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <img
+            src={character.image}
+            alt={character.name}
+            className="h-16 w-16 rounded-full object-cover"
+          />
+          <Typography variant="h1" className="text-gray-900">
+            {character.name}
+          </Typography>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="ghost"
+            onClick={() => toggleFavorite({ variables: { id: character.id } })}
+          >
+            <Heart
+              className={clsx("h-6 w-6", {
+                "fill-[#53C629] text-[#53C629]": character.favorite,
+                "text-gray-300": !character.favorite,
+              })}
             />
-          </div>
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              if (
+                window.confirm(
+                  "Are you sure you want to delete this character?"
+                )
+              ) {
+                softDeleteCharacter({ variables: { id: character.id } });
+              }
+            }}
+          >
+            <Trash2 className="h-6 w-6 text-gray-400" />
+          </Button>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <Typography variant="h3">Comments</Typography>
-        <div className="flex gap-2">
+      <div className="mb-8">
+        <CharacterAttribute label="Specie" value={character.species} />
+        <CharacterAttribute label="Status" value={character.status} />
+        <CharacterAttribute label="Gender" value={character.gender} />
+        <CharacterAttribute label="Origin" value={character.origin} />
+        <CharacterAttribute label="Location" value={character.location} />
+      </div>
+
+      {/* Comments Section */}
+      <div className="rounded-lg bg-gray-50 p-6">
+        <Typography variant="h3" className="mb-4">
+          Comments
+        </Typography>
+
+        <div className="mb-6 flex gap-2">
           <Input
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="flex-1"
+            placeholder="Write a comment..."
+            className="flex-1 bg-white"
           />
-          <Button onClick={handleAddComment}>Add Comment</Button>
+          <Button onClick={handleAddComment}>Post</Button>
         </div>
+
         <div className="space-y-4">
           {character.comments?.map(
             (comment: {
-              id: Key | null | undefined;
+              id: Key;
               content: string;
               created: string | number | Date;
             }) => (
               <div
                 key={comment.id}
-                className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800"
+                className="rounded-lg bg-white p-4 shadow-sm transition-all hover:shadow-md"
               >
-                <Typography>{comment.content}</Typography>
-                <Typography variant="small">
-                  {new Date(comment.created).toLocaleString()}
+                <Typography variant="p">{comment.content}</Typography>
+                <Typography variant="small" className="mt-2">
+                  {new Date(comment.created).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </Typography>
               </div>
             )

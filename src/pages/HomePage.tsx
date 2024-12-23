@@ -107,7 +107,7 @@ export function HomePage() {
             />
           )}
         </div>
-        <div className="flex-1 overflow-auto p-6">
+        <div className="flex-1 overflow-auto px-12">
           {selectedCharacter ? (
             <CharacterDetail id={selectedCharacter} />
           ) : (

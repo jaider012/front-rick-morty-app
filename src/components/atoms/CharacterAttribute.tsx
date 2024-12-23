@@ -7,11 +7,13 @@ interface CharacterAttributeProps {
 
 export function CharacterAttribute({ label, value }: CharacterAttributeProps) {
   return (
-    <div className="space-y-1">
-      <Typography variant="small" className="text-gray-500">
+    <div className="border-b border-gray-100 py-4">
+      <Typography as="h3" variant="h4" className="text-gray-900">
         {label}
       </Typography>
-      <Typography>{value}</Typography>
+      <Typography variant="p" className="mt-1 text-gray-500">
+        {value}
+      </Typography>
     </div>
   );
 }
